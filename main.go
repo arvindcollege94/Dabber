@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"Dabber/binance"
@@ -17,13 +16,7 @@ func main() {
 	}
 
 	for ts := range c {
-		b, err := json.MarshalIndent(ts, "", "")
-		if err != nil {
-			panic(err)
-		}
-
-		fmt.Println(string(b))
-
+		fmt.Println(ts)
 	}
 
 }
