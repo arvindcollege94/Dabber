@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"sync"
 )
 
 const (
@@ -15,11 +16,13 @@ const (
 
 type binanceClient struct {
 	client *http.Client
+	wg     *sync.WaitGroup
 }
 
 func NewBinanceClient() *binanceClient {
 	return &binanceClient{
 		client: &http.Client{},
+		wg:     &sync.WaitGroup{},
 	}
 }
 
@@ -59,4 +62,9 @@ func (bc *binanceClient) GetTradeRatio(a, b string) (float64, error) {
 	}
 
 	return strconv.ParseFloat(jsonResp.Price, 64)
+}
+
+// Close releases resources the client was using.
+func (bc *binanceClient) Close() {
+	bc.wg.Wait()
 }

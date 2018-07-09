@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"Dabber/binance"
@@ -8,11 +9,21 @@ import (
 
 func main() {
 	b := binance.NewBinanceClient()
+	defer b.Close()
 
-	r, err := b.GetTradeRatio("DENT", "BTC")
+	c, err := b.GetTickerStream("ethbtc")
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(r)
+	for ts := range c {
+		b, err := json.MarshalIndent(ts, "", "")
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println(string(b))
+
+	}
+
 }
