@@ -31,12 +31,12 @@ func (bc *binanceClient) GetTickerStream(symbol string) (<-chan tickerStreamInfo
 	if err != nil {
 		return ret, err
 	}
-	defer conn.Close()
 
 	bc.wg.Add(1)
 	go func() {
 		defer bc.wg.Done()
 		defer close(ret)
+		defer conn.Close()
 		for {
 			_, msg, err := conn.ReadMessage()
 			if err != nil {
